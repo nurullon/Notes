@@ -7,7 +7,7 @@ namespace Notes.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class NotesController : Controller
+public class NotesController : ControllerBase
 {
     private readonly NotesDbContext notesDbContext;
     public NotesController(NotesDbContext notesDbContext)
@@ -22,11 +22,10 @@ public class NotesController : Controller
     [HttpPost]
     public async Task<IActionResult> AddNoteAsync(Note note)
     {
-        note.Id = Guid.NewGuid();
         await this.notesDbContext.Notes.AddAsync(note);
         await this.notesDbContext.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetNoteByIdAsync), new {id = note.Id}, note);
+        return Ok(note);
     }
 
     /// <summary>
@@ -36,7 +35,8 @@ public class NotesController : Controller
     /// <param name="updatedNote"></param>
     /// <returns></returns>
     [HttpPut]
-    public async Task<IActionResult> UpdateNoteAsync([FromRoute] Guid id, [FromBody] Note updatedNote)
+    [Route("{id:long}")]
+    public async Task<IActionResult> UpdateNoteAsync([FromRoute] long id, [FromBody] Note updatedNote)
     {
         var existNote = await notesDbContext.Notes.FirstOrDefaultAsync(note => note.Id.Equals(id));
         if (existNote is null)
@@ -46,7 +46,7 @@ public class NotesController : Controller
         existNote.IsVisible = updatedNote.IsVisible;
         existNote.Description = updatedNote.Description;
 
-        this.notesDbContext.Notes.Update(existNote);
+        this.notesDbContext.Notes.Update(existNote).State = EntityState.Modified;
         await this.notesDbContext.SaveChangesAsync();
 
         return Ok(existNote);
@@ -58,8 +58,8 @@ public class NotesController : Controller
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete]
-    [Route("{id:Guid}")]
-    public async Task<IActionResult> DeleteNoteAsync([FromRoute] Guid id)
+    [Route("{id:long}")]
+    public async Task<IActionResult> DeleteNoteAsync([FromRoute] long id)
     {
         var existNote = await notesDbContext.Notes.FirstOrDefaultAsync(note => note.Id.Equals(id));
         if (existNote is null)
@@ -77,9 +77,9 @@ public class NotesController : Controller
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet]
-    [Route("{id:Guid}")]
+    [Route("{id:long}")]
     [ActionName("GetNoteById")]
-    public async Task<IActionResult> GetNoteByIdAsync([FromRoute] Guid id)
+    public async Task<IActionResult> GetNoteByIdAsync([FromRoute] long id)
     {
         var note = await this.notesDbContext.Notes
                   .FirstOrDefaultAsync(note => note.Id.Equals(id));
@@ -93,7 +93,9 @@ public class NotesController : Controller
     /// Get the notes from the database
     /// </summary>
     /// <returns></returns>
-    [HttpGet("get")]
+    [HttpGet    ]
     public async Task<IActionResult> GetAllNotesAsync()
-        => Ok(await this.notesDbContext.Notes.ToListAsync());
+    {
+        return Ok(await this.notesDbContext.Notes.ToListAsync());
+    }
 }
