@@ -6,7 +6,6 @@ A simple and easy-to-use notes app to help you organize your thoughts and tasks.
 
 - [Introduction](#introduction)
 - [Features](#features)
-- [Demo](#demo)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -24,12 +23,6 @@ Welcome to the Notes App repository! This is a lightweight web application desig
 - User-friendly and intuitive interface.
 - Support for Markdown for rich text formatting.
 - Secure authentication system to protect your data.
-
-## Demo
-
-Check out the live demo of the Notes App here: [Live Demo](https://your-demo-url.com)
-
-![Notes App Demo](demo-screenshot.png)
 
 ## Installation
 
