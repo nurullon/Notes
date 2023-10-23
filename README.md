@@ -1,7 +1,5 @@
 # Notes App
 
-![Notes App Logo](link-to-your-logo.png)
-
 A simple and easy-to-use notes app to help you organize your thoughts and tasks.
 
 ## Table of Contents
