@@ -1,4 +1,4 @@
-# Notes App
+# Notes
 
 A simple and easy-to-use notes app to help you organize your thoughts and tasks.
 
